@@ -22,13 +22,39 @@ namespace TileUtil
         {
             while (true) {
                 Console.Write("Input: ");
-                string input = Console.ReadLine();
-                Execute(
-                    Regex
-                    .Matches(input, @"(?<match>\w+)|\""(?<match>[\w\s]*)""")
-                    .Cast<Match>()
-                    .Select(m => m.Groups["match"].Value).ToArray()
-                    );
+                string input = Console.ReadLine().Replace("\\", "/");
+                List<string> args = new List<string>();
+                bool inString = false;
+                string reading = string.Empty;
+
+                for (int i = 0; i < input.Length; i++) {
+                    char c = input[i];
+                    if (inString) {
+                        if (c == '"') {
+                            inString = false;
+                            if (reading.Length > 0)
+                                args.Add(reading);
+                            reading = string.Empty;
+                        }
+                        else
+                            reading += c;
+                    } else {
+                        if (c == '"')
+                            inString = true;
+                        else if (c == ' ') {
+                            if (reading.Length > 0)
+                                args.Add(reading);
+                            reading = string.Empty;
+                        }
+                        else
+                            reading += c;
+                    }
+                }
+
+                if (reading.Length > 0)
+                    args.Add(reading);
+
+                Execute(args.ToArray());
             }
         }
 

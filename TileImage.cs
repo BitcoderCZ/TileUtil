@@ -37,7 +37,7 @@ namespace TileUtil
                 _data = ms.ToArray();
             }
             byte[] data = new byte[_data.Length - 4];
-            Array.Copy(_data, 8, data, 0, data.Length);
+            Array.Copy(_data, 4, data, 0, data.Length);
             ushort width = BitConverter.ToUInt16(_data, 0);
             ushort height = BitConverter.ToUInt16(_data, 2);
             return new TileImage(width, height, data);
